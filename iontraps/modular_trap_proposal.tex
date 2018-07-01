@@ -4,13 +4,39 @@
 \usepackage[german]{babel}
 \usepackage{color}
 \usepackage{titlepic}
+\usepackage{listings}
 \usepackage{graphicx}
 \pagecolor{black}
 \color{white}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{black},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+ 
 \begin{document}
 
 \titlehead{\centering\includegraphics[width=5cm]{77K_fin}}
-\title{ A naive proposal for a scalable modular multipole RF trap }
+\title{ A naive proposal for a scalable modular planar Hultipole RF trap }
 
 \author{Sascha Naske\\
 %        Adenemer Weg 10\\
@@ -24,11 +50,32 @@
 In this proposal we are trying to figure out how to design and manufacture multipole RF trap chips as a brick for larger trap constructions of higher geometric and topological complexity.
 To accomplish the fiddly part of attain a concerted multifold of kind of synchronized RF sub-traps on those ceramics substrate chips (we'll call them bricks for pun reasons) we are using a hybrid PLL approach to experiment with different synchronisation strategies.
 That means every brick has its own PLL-ed HF trap drivers. To get rid of bulky cavity or helical resonators, we are testing the feasibility of using piezo resonators - in our case simply off-the-shelf quartz resonators.
+The Ion Traps itself are Hilbert Curve shaped rails. We use this approach for two primary reasons. The first reason is, the fractal nature of the hilbert curve allows a higher density of ions on the planar area. The second reason is, even the topology is linear or circular it is possible to have convinient interaction distances even though the linear distance on the curve is $> 1$. To change the direct 2D grid neighbourhood it's only a shift operation on the circular QCCD register aka the trap. That should lead to easy options for surface code error correction and stuff like that.
 \end{abstract}
 %\tableofcontents
+\section{The Trap}
+The trap is a circular rail planar trap folded in the shape of a Hilbert Curve. We are using Lindenmayer Systems to generate those geometries.
+To visualize the Idea have a look at this hacky Python snippet:
+\\
+\begin{lstlisting}[language=Python]
+ccw = numpy.array([[cos(PI/2), -sin(PI/2)], [sin(PI/2), cos(PI/2)]])
+cw = numpy.array([[cos(-PI/2), -sin(-PI/2)], [sin(-PI/2), cos(-PI/2)]])
+axiom = 'LFL+F+LFL'
+production = { 'L' : '-RF+LFL+FR-',
+               'R' : '+LF-RFR-FL+'}
+for x in range(0, depth) :
+         tmp = ''
+         for s in axiom:
+                 if s in production.keys():
+                         tmp += production[s]
+                 else:
+                         tmp += s
+         axiom = tmp
+
+\end{lstlisting}
+\subsection{Semi-linear configuration along Hilbert Curves}
 \section{The Brick}
 \section{The Chamber}
-\section{Semi-linear configuration along Hilbert Curves}
 \section{Connecting Chambers}
 \section{CMOS Image Sensor App Board}
 \end{document}
